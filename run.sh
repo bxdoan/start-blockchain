@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
+s=$BASH_SOURCE ; s=$(dirname "$s") ; s=$(cd "$s" && pwd) ; SCRIPT_HOME="$s"
+
+env="$SCRIPT_HOME/.env"
+if [[ -f ${env} ]]; then source ${env}; fi
+
+if [[ -z ${API_PORT} ]]; then API_PORT=5555; fi
 
 function start () {
-    pipenv run gunicorn -b 127.0.0.1:5000 --reload app:api
+    pipenv run gunicorn -b 0.0.0.0:${API_PORT} --reload blockchain:api
 }
 
 function stop () {
@@ -18,4 +24,4 @@ case "$1" in
     *)
     echo "Usage: run.sh {start|stop}"
     exit 1
-esac#!/usr/bin/env bash
+esac

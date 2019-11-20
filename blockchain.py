@@ -1,3 +1,8 @@
+import falcon
+
+
+api = application = falcon.API()
+
 class Blockchain(object):
     def __init__(self):
         self.chain = []
@@ -20,3 +25,8 @@ class Blockchain(object):
     def last_block(self):
         # Returns the last Block in the chain
         pass
+
+    def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200
+
+api.add_route('/', Blockchain())
