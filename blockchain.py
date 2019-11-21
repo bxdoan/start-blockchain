@@ -1,7 +1,10 @@
+# Author: Doan Bui (bxdoan93@gmail.com)
+# https://github.com/bxdoan/start-block-chain
+
 import falcon
 
-
 api = application = falcon.API()
+
 
 class Blockchain(object):
     def __init__(self):
@@ -28,5 +31,6 @@ class Blockchain(object):
 
     def on_get(self, req, resp):
         resp.status = falcon.HTTP_200
+
 
 api.add_route('/', Blockchain())

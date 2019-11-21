@@ -2,8 +2,11 @@
 s=$BASH_SOURCE ; s=$(dirname "$s") ; s=$(cd "$s" && pwd) ; SCRIPT_HOME="$s"
 
 env="$SCRIPT_HOME/.env"
+
+# check existing .env file
 if [[ -f ${env} ]]; then source ${env}; fi
 
+# check existing api ports
 if [[ -z ${API_PORT} ]]; then API_PORT=5555; fi
 
 function start () {
