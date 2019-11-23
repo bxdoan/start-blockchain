@@ -9,6 +9,8 @@ import json
 
 api = application = falcon.API()
 
+# Generate a globally unique address for this node
+node_identifier = str(uuid4()).replace('-', '')
 
 class Blockchain(object):
     def __init__(self):
@@ -101,7 +103,13 @@ class Blockchain(object):
         return guess_hash[:4] == "0000"
 
     def on_get(self, req, resp):
+        response = {
+            'chain' : self.chain,
+            'length': len(self.chain),
+        }
+
         resp.status = falcon.HTTP_200
+        resp.body = json.dumps(response)
 
 class ResourcesTransactionNew(Blockchain):
     def on_post(self, req, resp):
@@ -116,8 +124,43 @@ class ResourcesTransactionNew(Blockchain):
         resp.status = falcon.HTTP_200
         resp.body = json.dumps(response)
 
+class ResourcesMine(Blockchain):
+    def on_get(self, req, resp):
+        """
+         It has to do three things:
+        * Calculate the Proof of Work
+        * Reward the miner (us) by adding a transaction granting us 1 coin
+        * Forge the new Block by adding it to the chain
+        """
+        # We run the proof of work algorithm to get the next proof...
+        last_block = self.last_block
+        last_proof = last_block['proof']
+        proof = self.proof_of_work(last_proof)
 
-api.add_route('/', Blockchain())
-# api.add_route('/mine', Blockchain())
+        # We must receive a reward for finding the proof.
+        # The sender is "0" to signify that this node has mined a new coin.
+        self.new_transaction(
+            sender="0",
+            recipient=node_identifier,
+            amount=1,
+        )
+
+        # Forge the new Block by adding it to the chain
+        previous_hash = self.hash(last_block)
+        block = self.new_block(proof, previous_hash)
+
+        response = {
+            'message'      : "New Block Forged",
+            'index'        : block['index'],
+            'transactions' : block['transactions'],
+            'proof'        : block['proof'],
+            'previous_hash': block['previous_hash'],
+        }
+
+        resp.status = falcon.HTTP_200
+        resp.body = json.dumps(response)
+
+
+api.add_route('/mine', ResourcesMine())
 api.add_route('/transactions/new', ResourcesTransactionNew())
-# api.add_route('/chain', Blockchain())
+api.add_route('/chain', Blockchain())
