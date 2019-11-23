@@ -2,6 +2,7 @@
 # https://github.com/bxdoan/start-blockchain
 from time import time
 from uuid import uuid4
+from urllib.parse import urlparse
 
 import falcon
 import hashlib
@@ -16,6 +17,7 @@ class Blockchain(object):
     def __init__(self):
         self.chain = []
         self.current_transactions = []
+        self.nodes = set()
 
         # Create the genesis block
         self.new_block(proof=100, previous_hash=1)
@@ -29,11 +31,11 @@ class Blockchain(object):
         """
 
         block = {
-            'index': len(self.chain) + 1,
-            'timestamp': time(),
-            'transactions': self.current_transactions,
-            'proof': proof,
-            'previous_hash': previous_hash or self.hash(self.chain[-1]),
+            'index'         : len(self.chain) + 1,
+            'timestamp'     : time(),
+            'transactions'  : self.current_transactions,
+            'proof'         : proof,
+            'previous_hash' : previous_hash or self.hash(self.chain[-1]),
         }
 
         # Reset the current list of transactions
@@ -89,6 +91,15 @@ class Blockchain(object):
 
         return proof
 
+    def register_node(self, address):
+        """
+        Add a new node to the list of nodes
+        :param address: <str> Address of node. Eg. 'http://localhost:5555'
+        :return: None
+        """
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
+
     @staticmethod
     def valid_proof(last_proof, proof):
         """
@@ -104,27 +115,42 @@ class Blockchain(object):
 
     def on_get(self, req, resp):
         response = {
-            'chain' : self.chain,
-            'length': len(self.chain),
+            'message' : 'together with Doan learning blockchain'
         }
 
         resp.status = falcon.HTTP_200
         resp.body = json.dumps(response)
 
-class ResourcesTransactionNew(Blockchain):
+
+# Instantiate the Blockchain
+blockchain = Blockchain()
+
+class ResourcesAllChain():
+    def on_get(self, req, resp):
+        response = {
+            'chain' : blockchain.chain,
+            'length': len(blockchain.chain),
+        }
+
+        resp.status = falcon.HTTP_200
+        resp.body = json.dumps(response)
+
+
+class ResourcesTransactionNew():
     def on_post(self, req, resp):
         body = req.media
         required = ['sender', 'recipient', 'amount']
         if not all(k in body for k in required):
             raise falcon.HTTPBadRequest('Wrong request body',
                                         'A valid JSON document is required.')
-        index = Blockchain.new_transaction(self, body['sender'], body['recipient'], body['amount'])
+
+        index = blockchain.new_transaction(body['sender'], body['recipient'], body['amount'])
         response = {'message': f'Transaction will be added to Block {index}'}
 
         resp.status = falcon.HTTP_200
         resp.body = json.dumps(response)
 
-class ResourcesMine(Blockchain):
+class ResourcesMine():
     def on_get(self, req, resp):
         """
          It has to do three things:
@@ -133,21 +159,21 @@ class ResourcesMine(Blockchain):
         * Forge the new Block by adding it to the chain
         """
         # We run the proof of work algorithm to get the next proof...
-        last_block = self.last_block
+        last_block = blockchain.last_block
         last_proof = last_block['proof']
-        proof = self.proof_of_work(last_proof)
+        proof      = blockchain.proof_of_work(last_proof)
 
         # We must receive a reward for finding the proof.
         # The sender is "0" to signify that this node has mined a new coin.
-        self.new_transaction(
-            sender="0",
-            recipient=node_identifier,
-            amount=1,
+        blockchain.new_transaction(
+            sender    = "0",
+            recipient = node_identifier,
+            amount    = 1,
         )
 
         # Forge the new Block by adding it to the chain
-        previous_hash = self.hash(last_block)
-        block = self.new_block(proof, previous_hash)
+        previous_hash = blockchain.hash(last_block)
+        block = blockchain.new_block(proof, previous_hash)
 
         response = {
             'message'      : "New Block Forged",
@@ -161,6 +187,7 @@ class ResourcesMine(Blockchain):
         resp.body = json.dumps(response)
 
 
+api.add_route('/', Blockchain())
 api.add_route('/mine', ResourcesMine())
 api.add_route('/transactions/new', ResourcesTransactionNew())
-api.add_route('/chain', Blockchain())
+api.add_route('/chain', ResourcesAllChain())

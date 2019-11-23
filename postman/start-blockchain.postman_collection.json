@@ -1,0 +1,139 @@
+{
+	"info": {
+		"_postman_id": "7cd23ccd-6275-4217-b357-6a5c5040ba46",
+		"name": "start blockchain",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/transactions/new",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "26446e0c-16d8-4321-b2bc-cee944b9ee20",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"sender\": \"my address\",\n \"recipient\": \"someone else's address\",\n \"amount\": 6\n}"
+				},
+				"url": {
+					"raw": "{{url}}/transactions/new",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"transactions",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/mine",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "26446e0c-16d8-4321-b2bc-cee944b9ee20",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/mine",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"mine"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/chain",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "26446e0c-16d8-4321-b2bc-cee944b9ee20",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/chain",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"chain"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
