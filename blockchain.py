@@ -187,7 +187,7 @@ class Blockchain(object):
 # Instantiate the Blockchain
 blockchain = Blockchain()
 
-# RESOURCE
+# RESOURCE API
 class ResourcesAllChain:
     def on_get(self, req, resp):
         response = {
@@ -272,7 +272,8 @@ class ResourcesNodes:
 
         nodes = values['nodes']
         if nodes is None:
-            return "Error: Please supply a valid list of nodes", 400
+            falcon.HTTPBadRequest('Wrong request body',
+                                  'A valid JSON document is required.')
 
         for node in nodes:
             blockchain.register_node(node)
@@ -286,7 +287,7 @@ class ResourcesNodes:
         resp.body = json.dumps(response)
 
 
-# ROUTE
+# ROUTE API
 api.add_route('/', Blockchain())
 api.add_route('/mine', ResourcesMine())
 api.add_route('/transactions/new', ResourcesTransactionNew())

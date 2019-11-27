@@ -2,7 +2,7 @@
 This learning blockchain by practise using falcon framework
 
 ref. https://hackernoon.com/learn-blockchains-by-building-one-117428612f46
-
+clone into 2 repositories.
 ## Prepared
 setup `.env` file
 
@@ -14,7 +14,8 @@ pipenv install
 ## Start the service
 
 ```bash
-./run.sh start
+./run.sh start1
+./run.sh start2
 ```
 
 ## Stop the service

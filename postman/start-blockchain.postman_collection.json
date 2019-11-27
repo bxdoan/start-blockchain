@@ -47,6 +47,88 @@
 			"response": []
 		},
 		{
+			"name": "/nodes/register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "26446e0c-16d8-4321-b2bc-cee944b9ee20",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"nodes\" : [\"http://localhost:5556\"]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/nodes/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"nodes",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/nodes/resolve",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "26446e0c-16d8-4321-b2bc-cee944b9ee20",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n \"nodes\" : [\"http://localhost:5556\"]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/nodes/resolve",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"nodes",
+						"resolve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "/mine",
 			"event": [
 				{
