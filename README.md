@@ -29,16 +29,7 @@ pipenv install
 ```bash
 curl -X POST \
   http://localhost:5555/transactions/new \
-  -H 'Accept: */*' \
-  -H 'Accept-Encoding: gzip, deflate' \
-  -H 'Cache-Control: no-cache' \
-  -H 'Connection: keep-alive' \
-  -H 'Content-Length: 67' \
   -H 'Content-Type: application/json' \
-  -H 'Host: localhost:5555' \
-  -H 'Postman-Token: d655aa3f-8604-4658-82b9-27516a124be9,377db97b-dfcb-471f-9199-328161936bbb' \
-  -H 'User-Agent: PostmanRuntime/7.19.0' \
-  -H 'cache-control: no-cache' \
   -d '{
  "sender": "my address",
  "recipient": "someone else'\''s address",
